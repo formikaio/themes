@@ -74,7 +74,7 @@ To delete an existing theme, use the command:
 php artisan theme:destroy default
 ```
 
-> the type can be php, blade and twig.
+> the type can be php and blade.
 
 Create from the applicaton without CLI.
 
@@ -219,9 +219,9 @@ echo $which; // ./resources/themes/name/views/home/index.blade.php
 
 ### Compiler
 
-Theme now supports PHP, Blade and Twig. To use Blade or Twig template you just create a file with extension
+Theme now supports PHP and Blade. To use Blade template you just create a file with extension
 ```
-[file].blade.php or [file].twig.php
+[file].blade.php
 ```
 
 ### Render from string.
@@ -229,9 +229,6 @@ Theme now supports PHP, Blade and Twig. To use Blade or Twig template you just c
 ```php
 // Blade template.
 return $theme->string('<h1>{{ $name }}</h1>', array('name' => 'Teepluss'), 'blade')->render();
-
-// Twig Template
-return $theme->string('<h1>{{ name }}</h1>', array('name' => 'Teepluss'), 'twig')->render();
 ```
 
 ### Compile string
@@ -241,13 +238,6 @@ return $theme->string('<h1>{{ name }}</h1>', array('name' => 'Teepluss'), 'twig'
 $template = '<h1>Name: {{ $name }}</h1><p>{{ Theme::widget("WidgetIntro", array("userId" => 9999, "title" => "Demo Widget"))->render() }}</p>';
 
 echo Theme::blader($template, array('name' => 'Teepluss'));
-```
-
-```php
-// Twig compile.
-$template = '<h1>Name: {{ name }}</h1><p>{{ Theme.widget("WidgetIntro", {"userId" : 9999, "title" : "Demo Widget"}).render() }}</p>';
-
-echo Theme::twigy($template, array('name' => 'Teepluss'));
 ```
 
 ### Symlink from another view
@@ -577,7 +567,7 @@ php artisan theme:widget demo default --type=blade
 ```
 > Widget tpl is located in "resources/themes/[theme]/widgets/{widget-tpl}.{extension}"
 
-> The file name can be demo.php, demo.blade.php or demo.twig.php
+> The file name can be demo.php or demo.blade.php
 
 Now you will see a widget class at /app/Widgets/WidgetDemo.php
 

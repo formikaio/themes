@@ -1,4 +1,6 @@
-<?php namespace Teepluss\Theme\Commands;
+<?php
+
+namespace Teepluss\Theme\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Config\Repository;
@@ -6,7 +8,8 @@ use Illuminate\Filesystem\Filesystem as File;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ThemeGeneratorCommand extends Command {
+class ThemeGeneratorCommand extends Command
+{
 
 	/**
 	 * The console command name.
@@ -36,13 +39,13 @@ class ThemeGeneratorCommand extends Command {
 	 */
 	protected $files;
 
-    /**
-     * Create a new command instance.
-     *
-     * @param \Illuminate\Config\Repository     $config
-     * @param \Illuminate\Filesystem\Filesystem $files
-     * @return \Teepluss\Theme\Commands\ThemeGeneratorCommand
-     */
+	/**
+	 * Create a new command instance.
+	 *
+	 * @param \Illuminate\Config\Repository     $config
+	 * @param \Illuminate\Filesystem\Filesystem $files
+	 * @return \Teepluss\Theme\Commands\ThemeGeneratorCommand
+	 */
 	public function __construct(Repository $config, File $files)
 	{
 		$this->config = $config;
@@ -60,27 +63,25 @@ class ThemeGeneratorCommand extends Command {
 	public function fire()
 	{
 		// The theme is already exists.
-		if ($this->files->isDirectory($this->getPath(null)))
-		{
-			return $this->error('Theme "'.$this->getTheme().'" is already exists.');
+		if ($this->files->isDirectory($this->getPath(null))) {
+			return $this->error('Theme "' . $this->getTheme() . '" is already exists.');
 		}
 
 		$type = $this->option('type');
 
-		if ( ! in_array($type, array('php', 'blade', 'twig')))
-		{
+		if (!in_array($type, array('php', 'blade'))) {
 			// Blade or html.
-			$question = $this->ask('What type of template? [php|blade|twig]');
+			$question = $this->ask('What type of template? [php|blade]');
 
-			$type = in_array($question, array('php', 'blade', 'twig')) ? $question : 'php';
+			$type = in_array($question, ['php', 'blade']) ? $question : 'php';
 		}
 
 		// Directories.
 		$container = $this->config->get('theme.containerDir');
 
-		$this->makeDir($container['asset'].'/css');
-		$this->makeDir($container['asset'].'/js');
-		$this->makeDir($container['asset'].'/img');
+		$this->makeDir($container['asset'] . '/css');
+		$this->makeDir($container['asset'] . '/js');
+		$this->makeDir($container['asset'] . '/img');
 		$this->makeDir($container['layout']);
 		$this->makeDir($container['partial']);
 		$this->makeDir($container['view']);
@@ -90,22 +91,15 @@ class ThemeGeneratorCommand extends Command {
 		$layout = $this->config->get('theme.layoutDefault');
 
 		// Make file example.
-		switch ($type)
-		{
-			case 'blade' :
-				$this->makeFile('layouts/'.$layout.'.blade.php', $this->getTemplate('layout.blade'));
+		switch ($type) {
+			case 'blade':
+				$this->makeFile('layouts/' . $layout . '.blade.php', $this->getTemplate('layout.blade'));
 				$this->makeFile('partials/header.blade.php', $this->getTemplate('header'));
 				$this->makeFile('partials/footer.blade.php', $this->getTemplate('footer'));
 				break;
 
-			case 'twig' :
-				$this->makeFile('layouts/'.$layout.'.twig.php', $this->getTemplate('layout.twig'));
-				$this->makeFile('partials/header.twig.php', $this->getTemplate('header'));
-				$this->makeFile('partials/footer.twig.php', $this->getTemplate('footer'));
-				break;
-
-			default :
-				$this->makeFile('layouts/'.$layout.'.php', $this->getTemplate('layout'));
+			default:
+				$this->makeFile('layouts/' . $layout . '.php', $this->getTemplate('layout'));
 				$this->makeFile('partials/header.php', $this->getTemplate('header'));
 				$this->makeFile('partials/footer.php', $this->getTemplate('footer'));
 				break;
@@ -114,7 +108,7 @@ class ThemeGeneratorCommand extends Command {
 		// Generate inside config.
 		$this->makeFile('config.php', $this->getTemplate('config'));
 
-		$this->info('Theme "'.$this->getTheme().'" has been created.');
+		$this->info('Theme "' . $this->getTheme() . '" has been created.');
 	}
 
 	/**
@@ -125,8 +119,7 @@ class ThemeGeneratorCommand extends Command {
 	 */
 	protected function makeDir($directory)
 	{
-		if ( ! $this->files->isDirectory($this->getPath($directory)))
-		{
+		if (!$this->files->isDirectory($this->getPath($directory))) {
 			$this->files->makeDirectory($this->getPath($directory), 0777, true);
 		}
 	}
@@ -140,14 +133,12 @@ class ThemeGeneratorCommand extends Command {
 	 */
 	protected function makeFile($file, $template = null)
 	{
-		if ( ! $this->files->exists($this->getPath($file)))
-		{
+		if (!$this->files->exists($this->getPath($file))) {
 			$content = $this->getPath($file);
 
 			$facade = $this->option('facade');
-			if ( ! is_null($facade))
-			{
-				$template = preg_replace('/Theme(\.|::)/', $facade.'$1', $template);
+			if (!is_null($facade)) {
+				$template = preg_replace('/Theme(\.|::)/', $facade . '$1', $template);
 			}
 
 			$this->files->put($content, $template);
@@ -164,7 +155,7 @@ class ThemeGeneratorCommand extends Command {
 	{
 		$rootPath = $this->option('path');
 
-		return $rootPath.'/'.strtolower($this->getTheme()).'/' . $path;
+		return $rootPath . '/' . strtolower($this->getTheme()) . '/' . $path;
 	}
 
 	/**
@@ -185,7 +176,7 @@ class ThemeGeneratorCommand extends Command {
 	 */
 	protected function getTemplate($template)
 	{
-		$path = realpath(__DIR__.'/../templates/'.$template.'.txt');
+		$path = realpath(__DIR__ . '/../templates/' . $template . '.txt');
 
 		return $this->files->get($path);
 	}
@@ -209,13 +200,12 @@ class ThemeGeneratorCommand extends Command {
 	 */
 	protected function getOptions()
 	{
-		$path = public_path().'/'.$this->config->get('theme.themeDir');
+		$path = public_path() . '/' . $this->config->get('theme.themeDir');
 
 		return array(
 			array('path', null, InputOption::VALUE_OPTIONAL, 'Path to theme directory.', $path),
-			array('type', null, InputOption::VALUE_OPTIONAL, 'Theme view type [php|blade|twig].', null),
+			array('type', null, InputOption::VALUE_OPTIONAL, 'Theme view type [php|blade].', null),
 			array('facade', null, InputOption::VALUE_OPTIONAL, 'Facade name.', null),
 		);
 	}
-
 }
