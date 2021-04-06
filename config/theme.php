@@ -1,6 +1,6 @@
 <?php
 
-$serializer = new SuperClosure\Serializer;
+//$serializer = new SuperClosure\Serializer;
 
 return array(
 
@@ -93,7 +93,7 @@ return array(
 	*/
 
 	'events' => array(
-
+		/*
 		// Before all event, this event will effect for global.
 		'before' => $serializer->serialize(function ($theme) {
 			//$theme->setTitle('Something in global.');
@@ -110,6 +110,7 @@ return array(
 			// To use cook 'backbone' you can fire with 'serve' method.
 			// Theme::asset()->serve('backbone');
 		})
+		*/
 
 	),
 
