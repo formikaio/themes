@@ -2,7 +2,6 @@
 
 namespace Teepluss\Theme;
 
-use Arr;
 use Closure;
 use ReflectionClass;
 use Illuminate\Http\Response;
@@ -10,6 +9,7 @@ use Illuminate\View\Factory;
 use Illuminate\Config\Repository;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\View\Compilers\BladeCompiler;
 use Symfony\Component\HttpFoundation\Cookie;
 use Teepluss\Theme\Contracts\Theme as ThemeContract;
