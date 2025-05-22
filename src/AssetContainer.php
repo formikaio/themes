@@ -29,6 +29,8 @@ class AssetContainer {
      */
     public $name;
 
+    public $assets;
+
     /**
      * Create a new asset container instance.
      *
